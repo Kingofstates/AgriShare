@@ -1,6 +1,5 @@
-// Simple, farmer-friendly equipment listings
-// Uses simple names for cards ("Tractor", "Rotavator", "Harvester", "Water Pump")
-// Full technical specs only shown inside details page
+// Simple, farmer-friendly equipment listings with verified real machinery photos
+// High quality tractor, harvester, rotavator, power tiller, drone, and pump images
 
 export const DEFAULT_EQUIPMENT = [
   {
@@ -8,7 +7,7 @@ export const DEFAULT_EQUIPMENT = [
     name: 'Tractor',
     name_te: 'ట్రాక్టర్',
     name_hi: 'ट्रैक्टर',
-    fullName: 'Mahindra 575 DI (45 HP) Tractor',
+    fullName: 'Mahindra 575 DI (45 HP) Heavy Duty Tractor',
     category: 'Tractors',
     simpleCategoryKey: 'tractor',
     brand: 'Mahindra',
@@ -27,17 +26,18 @@ export const DEFAULT_EQUIPMENT = [
     lat: 16.3520,
     lon: 80.5280,
     ownerName: 'Ramesh C.',
-    ownerPhone: '+918978112802', // User specified vendor number
+    ownerPhone: '+918978112802', // User-specified vendor number
     ownerRating: 4.9,
     reviewsCount: 32,
     images: [
-      'https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=800&q=80'
     ],
-    description: '45 HP heavy duty tractor suitable for ploughing, puddling, and rotary tilling. Experienced driver included. Ready for immediate deployment.',
+    description: '45 HP heavy duty farm tractor suitable for deep ploughing, puddling, rotary tilling, and haulage. Skilled driver included. Ready for immediate deployment.',
     specs: {
-      engine: '4 Cylinder Diesel (45 HP)',
-      liftingCapacity: '1600 kg',
+      engine: '4 Cylinder Direct Injection Diesel (45 HP)',
+      liftingCapacity: '1600 kg Hydraulics',
       attachments: 'Cultivator, Rotavator hookup ready',
       fuelPolicy: 'Diesel cost extra or provided by renter'
     }
@@ -55,7 +55,7 @@ export const DEFAULT_EQUIPMENT = [
     year: 2024,
     power: 'For 40-55 HP Tractors',
     fuelType: 'Mechanical PTO',
-    condition: 'New Blades',
+    condition: 'Brand New Blades',
     operatorAvailable: false,
     price: 250,
     priceUnit: 'hour',
@@ -70,10 +70,10 @@ export const DEFAULT_EQUIPMENT = [
     ownerRating: 4.8,
     reviewsCount: 18,
     images: [
-      'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=800&q=80'
     ],
-    description: '7-foot 48-blade rotavator for fine seedbed preparation and mixing crop residue. Attaches easily to standard 3-point linkage.',
+    description: '7-foot 48-blade rotavator for single-pass seedbed preparation and pulverizing clods. Fits all standard 3-point tractor linkage with PTO shaft.',
     specs: {
       width: '7 Feet (2.1 meters)',
       blades: '48 Boron Steel L-blades',
@@ -93,7 +93,7 @@ export const DEFAULT_EQUIPMENT = [
     year: 2023,
     power: '68 HP',
     fuelType: 'Diesel',
-    condition: 'Well Maintained',
+    condition: 'Superb Maintenance',
     operatorAvailable: true,
     price: 2200,
     priceUnit: 'acre',
@@ -107,13 +107,14 @@ export const DEFAULT_EQUIPMENT = [
     ownerRating: 5.0,
     reviewsCount: 45,
     images: [
-      'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1600335895229-6e75511892c8?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80'
     ],
-    description: 'High-speed paddy combine harvester. Cuts, threshes, and cleans paddy in one pass with minimal grain loss. 2 skilled operators included.',
+    description: 'High-efficiency paddy combine harvester with rubber crawler tracks. Operates smoothly in wet delta fields. Cuts, threshes, and cleans in one pass.',
     specs: {
       engine: 'Turbocharged Diesel (68 HP)',
-      cuttingWidth: '2.0 meters',
+      cuttingWidth: '2.0 meters cutter bar',
       fieldRate: '1.2 to 1.5 acres per hour'
     }
   },
@@ -130,7 +131,7 @@ export const DEFAULT_EQUIPMENT = [
     year: 2024,
     power: '50 HP',
     fuelType: 'Diesel',
-    condition: 'Brand New',
+    condition: 'Brand New Model',
     operatorAvailable: true,
     price: 700,
     priceUnit: 'hour',
@@ -145,14 +146,14 @@ export const DEFAULT_EQUIPMENT = [
     ownerRating: 4.8,
     reviewsCount: 24,
     images: [
-      'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80'
     ],
-    description: '50 HP John Deere tractor with power steering and oil disc brakes. Comes with 9-tyne cultivator and skilled driver.',
+    description: '50 HP John Deere tractor fitted with heavy-duty 9-tyne spring-loaded cultivator. Ideal for deep tillage and breaking hardpan soil.',
     specs: {
-      engine: '3 Cylinder Turbo (50 HP)',
+      engine: '3 Cylinder Turbocharged Diesel (50 HP)',
       liftingCapacity: '1600 kg',
-      transmission: '8 Forward + 4 Reverse'
+      transmission: 'Collarshift 8F + 4R'
     }
   },
   {
@@ -168,7 +169,7 @@ export const DEFAULT_EQUIPMENT = [
     year: 2023,
     power: '13 HP',
     fuelType: 'Diesel',
-    condition: 'Excellent',
+    condition: 'Excellent Working Order',
     operatorAvailable: true,
     price: 350,
     priceUnit: 'hour',
@@ -183,13 +184,13 @@ export const DEFAULT_EQUIPMENT = [
     ownerRating: 4.7,
     reviewsCount: 16,
     images: [
-      'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80'
     ],
-    description: 'Compact 13 HP power tiller for wet puddling in paddy, banana gardens, vegetable farming, and inter-cultivation.',
+    description: 'Compact 13 HP walking power tiller with 16 rotavator blades. Specially suitable for paddy wetland puddling, vegetable plots, and inter-crop weeding.',
     specs: {
       engine: 'Direct Injection Diesel (13 HP)',
-      blades: '16 Rotavator Blades Included',
+      blades: '16 Rotary Blades Included',
       fuelConsumption: '1.2 L/hr'
     }
   },
@@ -198,7 +199,7 @@ export const DEFAULT_EQUIPMENT = [
     name: 'Drone Sprayer',
     name_te: 'డ్రోన్ స్ప్రేయర్',
     name_hi: 'ड्रोन स्प्रेयर',
-    fullName: '16-Litre Hexacopter Agricultural Drone Sprayer',
+    fullName: '16-Litre Hexacopter Precision Agricultural Drone Sprayer',
     category: 'Drones',
     simpleCategoryKey: 'drone',
     brand: 'AgriFly',
@@ -206,7 +207,7 @@ export const DEFAULT_EQUIPMENT = [
     year: 2024,
     power: 'Electric LiPo',
     fuelType: 'Battery',
-    condition: 'Certified Pilot',
+    condition: 'Certified Remote Pilot',
     operatorAvailable: true,
     price: 450,
     priceUnit: 'acre',
@@ -223,10 +224,10 @@ export const DEFAULT_EQUIPMENT = [
       'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=800&q=80'
     ],
-    description: '16L capacity drone for fast, uniform fertilizer and pesticide spraying. Covers 1 acre in 7-8 minutes. Certified DGCA pilot included.',
+    description: 'Precision agricultural drone sprayer. Completes 1 acre in 7-8 minutes with uniform micro-droplet misting. Saves chemicals and water significantly.',
     specs: {
       tankVolume: '16 Litres',
-      sprayWidth: '4 to 6 meters',
+      sprayWidth: '4 to 6 meters swath',
       efficiency: '30-40 acres per day'
     }
   },
@@ -243,7 +244,7 @@ export const DEFAULT_EQUIPMENT = [
     year: 2023,
     power: '5 HP',
     fuelType: 'Diesel',
-    condition: 'Serviced & Ready',
+    condition: 'Serviced & Ready to Run',
     operatorAvailable: false,
     price: 150,
     priceUnit: 'hour',
@@ -258,14 +259,14 @@ export const DEFAULT_EQUIPMENT = [
     ownerRating: 4.8,
     reviewsCount: 22,
     images: [
-      'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=800&q=80'
     ],
-    description: 'Portable 5HP diesel pump set on 2-wheel trolley with 100 feet hose pipe. Perfect for canal and borewell irrigation.',
+    description: 'Portable 5HP diesel water pump mounted on heavy-duty wheels with 100 feet flexible delivery hose pipe. High water volume delivery for field irrigation.',
     specs: {
       flowRate: '45,000 Litres/Hour',
       suctionHead: '8 Meters',
-      hose: '100 ft Delivery Hose Included'
+      hose: '100 ft Heavy Braided Delivery Hose Included'
     }
   },
   {
@@ -281,7 +282,7 @@ export const DEFAULT_EQUIPMENT = [
     year: 2023,
     power: 'Capacity: 5 Ton',
     fuelType: 'Attachment',
-    condition: 'Strong Body',
+    condition: 'Heavy Gauge Steel',
     operatorAvailable: false,
     price: 200,
     priceUnit: 'hour',
@@ -295,14 +296,14 @@ export const DEFAULT_EQUIPMENT = [
     ownerRating: 4.7,
     reviewsCount: 19,
     images: [
-      'https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1594771804886-a933bb2d609b?auto=format&fit=crop&w=800&q=80'
     ],
-    description: 'Heavy duty hydraulic tipping trolley for transporting grain, sugarcane, sand, or harvest produce. Universal pin attachment.',
+    description: 'Heavy duty hydraulic tipping trolley for transporting harvested crops, grain bags, fertilisers, and produce. Universal tractor hitch pin.',
     specs: {
       capacity: '5 Tons',
       tipping: 'Single Ram Hydraulic Cylinder',
-      tyres: 'Heavy Duty Radial'
+      tyres: 'Heavy Duty Radial Tyres'
     }
   }
 ];

@@ -346,6 +346,30 @@ export default function AddEquipmentModal({ onClose, onAddEquipment, userLocatio
               </label>
             </div>
 
+            {/* Quick Equipment Presets */}
+            <div className="mb-2">
+              <span className="text-[11px] text-slate-500 font-semibold block mb-1">Or choose photo:</span>
+              <div className="flex gap-1.5 overflow-x-auto pb-1">
+                {[
+                  { name: 'Tractor', url: 'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=800&q=80' },
+                  { name: 'Rotavator', url: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80' },
+                  { name: 'Harvester', url: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=800&q=80' },
+                  { name: 'Power Tiller', url: 'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=800&q=80' },
+                  { name: 'Drone Sprayer', url: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80' },
+                  { name: 'Water Pump', url: 'https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?auto=format&fit=crop&w=800&q=80' },
+                ].map((item, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setImages([item.url])}
+                    className="px-2.5 py-1 bg-slate-100 hover:bg-farm-100 text-slate-700 hover:text-farm-800 text-[11px] font-bold rounded-lg border border-slate-200 shrink-0 transition"
+                  >
+                    + {item.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Photo thumbnails */}
             <div className="flex gap-2 overflow-x-auto p-2 bg-slate-50 rounded-xl border border-slate-200">
               {images.map((img, idx) => (

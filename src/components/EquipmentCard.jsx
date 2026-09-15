@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Phone, MessageCircle } from 'lucide-react';
+import { MapPin, Phone, MessageCircle, Trash2 } from 'lucide-react';
 import { TRANSLATIONS } from '../utils/translations';
 
 export default function EquipmentCard({
@@ -8,6 +8,7 @@ export default function EquipmentCard({
   userLocation,
   language = 'en',
   onSelect,
+  onRemove,
 }) {
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
 
@@ -23,7 +24,7 @@ export default function EquipmentCard({
       ? t.perDay 
       : t.perHour;
 
-  // Phone number for call / WhatsApp (DO NOT display text on card!)
+  // Phone number for call / WhatsApp (DO NOT display raw number text on card!)
   const vendorPhone = item.ownerPhone || '+918978112802';
   const cleanPhone = vendorPhone.replace(/[^0-9]/g, '');
 
@@ -44,6 +45,17 @@ export default function EquipmentCard({
     window.open(waUrl, '_blank', 'noopener,noreferrer');
   };
 
+  const handleRemove = (e) => {
+    e.stopPropagation();
+    if (window.confirm(t.confirmRemove)) {
+      if (onRemove) {
+        onRemove(item.id);
+      }
+    }
+  };
+
+  const isUserAdded = item.isCustom || (item.id && String(item.id).startsWith('custom-'));
+
   return (
     <div
       onClick={() => onSelect(item)}
@@ -58,29 +70,46 @@ export default function EquipmentCard({
           loading="lazy"
         />
 
-        {/* Clean, Non-overlapping Distance Tag */}
+        {/* Clean Distance Tag */}
         <div className="absolute bottom-2 left-2 bg-black/70 text-white text-[11px] font-semibold px-2 py-0.5 rounded-md backdrop-blur-xs flex items-center gap-1">
           <MapPin className="w-3 h-3 text-emerald-400" />
           <span>{distance !== null ? `${distance} ${t.kmAway}` : item.city}</span>
         </div>
+
+        {/* If added by user, show Remove button on top right */}
+        {isUserAdded && (
+          <button
+            type="button"
+            onClick={handleRemove}
+            className="absolute top-2 right-2 bg-red-600/90 hover:bg-red-700 text-white p-1.5 rounded-lg shadow-md transition active:scale-95"
+            title={t.removeListing}
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
 
       {/* Card Info */}
       <div className="p-3 flex-1 flex flex-col justify-between space-y-2">
         
         <div>
-          {/* Simple Name (e.g. "Tractor", "Harvester", "Rotavator") */}
-          <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-snug line-clamp-1 font-heading">
-            {displayName}
-          </h3>
+          <div className="flex items-start justify-between gap-1">
+            <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-snug line-clamp-1 font-heading">
+              {displayName}
+            </h3>
+            {isUserAdded && (
+              <span className="text-[10px] bg-emerald-100 text-farm-800 font-bold px-1.5 py-0.2 rounded shrink-0">
+                {t.myListing}
+              </span>
+            )}
+          </div>
 
-          {/* Location / Village */}
           <p className="text-[11px] sm:text-xs text-slate-500 flex items-center gap-1 mt-0.5 truncate">
             <span className="truncate">{item.city} {item.village ? `• ${item.village}` : ''}</span>
           </p>
         </div>
 
-        {/* Price Row (Bold, Amazon-style) */}
+        {/* Price Row */}
         <div className="pt-1 flex items-baseline justify-between border-t border-slate-100">
           <div>
             <span className="text-[10px] text-slate-400 block leading-tight">{t.rentalRate}</span>
@@ -97,7 +126,7 @@ export default function EquipmentCard({
           </span>
         </div>
 
-        {/* Two Clean Action Buttons (NO phone number text displayed) */}
+        {/* Two Clean Action Buttons (NO raw phone numbers displayed) */}
         <div className="grid grid-cols-2 gap-2 pt-1">
           
           {/* 1. Call Button */}

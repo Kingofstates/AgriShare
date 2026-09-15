@@ -7,16 +7,15 @@ import AddEquipmentModal from './components/AddEquipmentModal';
 import Footer from './components/Footer';
 
 import { DEFAULT_EQUIPMENT } from './data/equipmentData';
-import { getCustomEquipment, saveCustomEquipment } from './utils/storage';
+import { getCustomEquipment, saveCustomEquipment, removeCustomEquipment } from './utils/storage';
 import { calculateDistance, KNOWN_CITIES, getCityCoordinates } from './utils/distance';
 import { TRANSLATIONS } from './utils/translations';
-import { RefreshCw } from 'lucide-react';
 
 export default function App() {
   // Equipment Data
   const [equipmentList, setEquipmentList] = useState([]);
   
-  // User Location State
+  // User Location State (Default: Guntur)
   const [userLocation, setUserLocation] = useState({
     city: 'Guntur',
     lat: 16.3067,
@@ -94,6 +93,15 @@ export default function App() {
     setEquipmentList([newItem, ...equipmentList]);
   };
 
+  // Remove Equipment Handler (Allows added person to remove the item!)
+  const handleRemoveEquipment = (id) => {
+    removeCustomEquipment(id);
+    setEquipmentList((prev) => prev.filter((item) => item.id !== id));
+    if (selectedEquipment?.id === id) {
+      setSelectedEquipment(null);
+    }
+  };
+
   // Compute distances, filter & sort
   const processedEquipment = useMemo(() => {
     return equipmentList
@@ -120,7 +128,7 @@ export default function App() {
           return false;
         }
 
-        // Search filter (name, translated names, full name, city)
+        // Search filter (name, translated names, full name, city, description)
         if (searchTerm.trim()) {
           const q = searchTerm.toLowerCase();
           const matchName = item.name?.toLowerCase().includes(q);
@@ -153,7 +161,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-farm-600 selection:text-white">
       
-      {/* 1. Amazon-Style Top Bar */}
+      {/* 1. Header with comfortable breathing room & guaranteed mobile location bar */}
       <Navbar
         currentLocation={userLocation}
         onDetectLocation={handleDetectLocation}
@@ -175,11 +183,11 @@ export default function App() {
         totalResults={processedEquipment.length}
       />
 
-      {/* 3. Main Product Grid (Amazon Mobile style 2-col or compact cards) */}
-      <main className="max-w-6xl mx-auto px-2.5 sm:px-4 py-4 flex-1 w-full">
+      {/* 3. Main Product Grid */}
+      <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex-1 w-full">
         
         {processedEquipment.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {processedEquipment.map((item) => (
               <EquipmentCard
                 key={item.id}
@@ -188,12 +196,13 @@ export default function App() {
                 userLocation={userLocation}
                 language={language}
                 onSelect={(eq) => setSelectedEquipment(eq)}
+                onRemove={handleRemoveEquipment}
               />
             ))}
           </div>
         ) : (
           /* Empty state */
-          <div className="text-center py-12 px-4 bg-white rounded-2xl border border-slate-200 max-w-sm mx-auto my-6 space-y-3">
+          <div className="text-center py-12 px-4 bg-white rounded-2xl border border-slate-200 max-w-sm mx-auto my-6 space-y-3 shadow-xs">
             <span className="text-3xl block">🌾</span>
             <h3 className="font-bold text-slate-800 text-sm">{t.noMachinesFound}</h3>
             <button
@@ -201,7 +210,7 @@ export default function App() {
                 setSearchTerm('');
                 setSelectedCategory('all');
               }}
-              className="px-4 py-1.5 bg-farm-700 text-white font-bold text-xs rounded-lg shadow-xs"
+              className="px-4 py-2 bg-farm-700 hover:bg-farm-800 text-white font-bold text-xs rounded-lg shadow-xs transition active:scale-95"
             >
               {t.resetFilters}
             </button>
@@ -210,7 +219,7 @@ export default function App() {
 
       </main>
 
-      {/* Equipment Detail Modal */}
+      {/* Equipment Detail Modal with Sticky Back & Close buttons */}
       {selectedEquipment && (
         <EquipmentDetailModal
           item={selectedEquipment}
@@ -218,10 +227,11 @@ export default function App() {
           userLocation={userLocation}
           language={language}
           onClose={() => setSelectedEquipment(null)}
+          onRemove={handleRemoveEquipment}
         />
       )}
 
-      {/* Add Equipment Modal */}
+      {/* Add Equipment Modal with spacious layout and sticky back */}
       {isAddModalOpen && (
         <AddEquipmentModal
           userLocation={userLocation}
@@ -231,7 +241,7 @@ export default function App() {
         />
       )}
 
-      {/* Clean Footer (No personal phone numbers, no college project text) */}
+      {/* Clean Footer */}
       <Footer language={language} />
 
     </div>

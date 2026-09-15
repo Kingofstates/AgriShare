@@ -1,14 +1,44 @@
-import React, { useState } from 'react';
-import { X, MapPin, Phone, MessageCircle, Star, Fuel, CheckCircle2, Calculator, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, ArrowLeft, MapPin, Phone, MessageCircle, Calculator, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 import { TRANSLATIONS } from '../utils/translations';
 
-export default function EquipmentDetailModal({ item, distance, userLocation, language = 'en', onClose }) {
+export default function EquipmentDetailModal({ item, distance, userLocation, language = 'en', onClose, onRemove }) {
   if (!item) return null;
 
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [duration, setDuration] = useState(4);
   const [calcUnit, setCalcUnit] = useState(item.priceUnit || 'hour');
+
+  // Handle Browser / Mobile Hardware Back Button
+  useEffect(() => {
+    // Push history state so Android/browser back button closes modal instead of navigating away!
+    window.history.pushState({ modal: 'equipment-detail' }, '');
+
+    const handlePopState = () => {
+      onClose();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    // Prevent body scrolling when modal is open
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
+
+  const handleSafeClose = () => {
+    // If state was pushed, pop it or call onClose
+    if (window.history.state?.modal === 'equipment-detail') {
+      window.history.back();
+    } else {
+      onClose();
+    }
+  };
 
   const vendorPhone = item.ownerPhone || '+918978112802';
   const cleanPhone = vendorPhone.replace(/[^0-9]/g, '');
@@ -35,29 +65,72 @@ export default function EquipmentDetailModal({ item, distance, userLocation, lan
   if (language === 'te' && item.name_te) displayName = `${item.name_te} (${item.fullName || item.name})`;
   if (language === 'hi' && item.name_hi) displayName = `${item.name_hi} (${item.fullName || item.name})`;
 
+  const isUserAdded = item.isCustom || (item.id && String(item.id).startsWith('custom-'));
+
+  const handleRemove = () => {
+    if (window.confirm(t.confirmRemove)) {
+      if (onRemove) {
+        onRemove(item.id);
+      }
+      handleSafeClose();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
-      
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex flex-col items-center justify-start sm:justify-center p-0 sm:p-4 animate-fadeIn"
+      onClick={handleSafeClose}
+    >
       <div 
-        className="bg-white rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-hidden flex flex-col shadow-2xl border border-slate-200"
+        className="bg-white w-full sm:max-w-2xl min-h-screen sm:min-h-0 sm:max-h-[92vh] sm:rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-slate-200 my-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-slate-50">
-          <span className="font-bold text-slate-800 text-sm">{t.viewDetails}</span>
+        {/* STICKY TOP NAVIGATION BAR - Always visible on mobile and desktop! */}
+        <div className="sticky top-0 z-20 flex items-center justify-between px-3.5 py-3 border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-xs">
+          {/* Prominent Back Button */}
           <button
-            onClick={onClose}
-            className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition"
+            type="button"
+            onClick={handleSafeClose}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm transition active:scale-95"
+            title="Go Back"
           >
-            <X className="w-5 h-5" />
+            <ArrowLeft className="w-4 h-4" />
+            <span>{t.back}</span>
           </button>
+
+          <span className="font-extrabold text-slate-800 text-xs sm:text-sm truncate max-w-[180px] sm:max-w-[280px]">
+            {item.name}
+          </span>
+
+          {/* Right Actions: Remove if owner + Big 'X' Close Button */}
+          <div className="flex items-center gap-2">
+            {isUserAdded && (
+              <button
+                type="button"
+                onClick={handleRemove}
+                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                title={t.removeListing}
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={handleSafeClose}
+              className="p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition active:scale-95"
+              title={t.close}
+            >
+              <X className="w-5 h-5 stroke-[2.5]" />
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Content */}
-        <div className="overflow-y-auto p-4 space-y-4 flex-1 text-slate-800">
+        <div className="overflow-y-auto p-4 sm:p-5 space-y-4 flex-1 text-slate-800">
           
-          {/* Images */}
-          <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-900">
+          {/* Images Carousel */}
+          <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-900 shadow-xs">
             <img
               src={images[activeImgIndex]}
               alt={item.name}
@@ -67,25 +140,25 @@ export default function EquipmentDetailModal({ item, distance, userLocation, lan
               <>
                 <button
                   onClick={() => setActiveImgIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/60 text-white"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 text-white active:scale-95"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setActiveImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/60 text-white"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 text-white active:scale-95"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </>
             )}
-            <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2.5 py-1 rounded-md flex items-center gap-1">
+            <div className="absolute bottom-2.5 left-2.5 bg-black/75 text-white text-xs px-2.5 py-1 rounded-md flex items-center gap-1">
               <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-              <span>{item.city} ({distance !== null ? `${distance} ${t.kmAway}` : ''})</span>
+              <span>{item.city} {distance !== null ? `(${distance} ${t.kmAway})` : ''}</span>
             </div>
           </div>
 
-          {/* Title & Price */}
+          {/* Title & Rates */}
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-heading">
               {displayName}
@@ -111,7 +184,7 @@ export default function EquipmentDetailModal({ item, distance, userLocation, lan
             <p className="leading-relaxed">{item.description}</p>
           </div>
 
-          {/* Technical Specs (Only in Details Page) */}
+          {/* Specifications (Only in Details Page) */}
           <div className="space-y-2">
             <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider">Specifications</h4>
             <div className="grid grid-cols-2 gap-2 text-xs">
@@ -136,7 +209,7 @@ export default function EquipmentDetailModal({ item, distance, userLocation, lan
             </div>
           </div>
 
-          {/* Cost Calculator */}
+          {/* Rental Cost Estimator */}
           <div className="bg-emerald-50/70 p-3.5 rounded-xl border border-emerald-200 space-y-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-farm-800">
               <Calculator className="w-4 h-4" />
@@ -169,11 +242,11 @@ export default function EquipmentDetailModal({ item, distance, userLocation, lan
 
         </div>
 
-        {/* Action Buttons Footer */}
-        <div className="p-3 bg-white border-t border-slate-200 grid grid-cols-2 gap-2.5">
+        {/* Action Buttons Sticky Footer */}
+        <div className="p-3.5 bg-white border-t border-slate-200 grid grid-cols-2 gap-3">
           <a
             href={callUrl}
-            className="flex items-center justify-center gap-1.5 py-2.5 bg-farm-50 hover:bg-farm-600 text-farm-800 hover:text-white border border-farm-400 rounded-xl font-bold text-xs sm:text-sm transition active:scale-95"
+            className="flex items-center justify-center gap-1.5 py-3 bg-farm-50 hover:bg-farm-600 text-farm-800 hover:text-white border border-farm-400 rounded-xl font-bold text-xs sm:text-sm transition active:scale-95"
           >
             <Phone className="w-4 h-4" />
             <span>{t.call}</span>
@@ -183,7 +256,7 @@ export default function EquipmentDetailModal({ item, distance, userLocation, lan
             href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1.5 py-2.5 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl font-bold text-xs sm:text-sm transition shadow-xs active:scale-95"
+            className="flex items-center justify-center gap-1.5 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl font-bold text-xs sm:text-sm transition shadow-xs active:scale-95"
           >
             <MessageCircle className="w-4 h-4 fill-white" />
             <span>{t.whatsapp}</span>

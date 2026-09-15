@@ -16,11 +16,23 @@ export function getCustomEquipment() {
 export function saveCustomEquipment(item) {
   try {
     const current = getCustomEquipment();
-    const updated = [item, ...current];
+    const updated = [{ ...item, isCustom: true }, ...current];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     return updated;
   } catch (e) {
     console.error('Failed to save equipment to localStorage', e);
+    return [];
+  }
+}
+
+export function removeCustomEquipment(id) {
+  try {
+    const current = getCustomEquipment();
+    const updated = current.filter((item) => item.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    return updated;
+  } catch (e) {
+    console.error('Failed to remove equipment from localStorage', e);
     return [];
   }
 }

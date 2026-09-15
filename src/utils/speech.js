@@ -1,4 +1,4 @@
-// Speech Recognition Utility using Web Speech API
+// Robust Speech Recognition Service for Multilingual Agricultural Inputs
 
 export class SpeechInputService {
   constructor() {
@@ -9,35 +9,59 @@ export class SpeechInputService {
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
       if (SpeechRecognition) {
-        this.recognition = new SpeechRecognition();
-        this.recognition.continuous = false;
-        this.recognition.interimResults = false;
-        this.recognition.lang = 'en-IN'; // Default to Indian English, can also adapt to Telugu / Hindi
-        this.isSupported = true;
+        try {
+          this.recognition = new SpeechRecognition();
+          this.recognition.continuous = false;
+          this.recognition.interimResults = true; // Show interim text as user speaks!
+          this.recognition.maxAlternatives = 1;
+          this.isSupported = true;
+        } catch (e) {
+          console.warn('SpeechRecognition init error:', e);
+        }
       }
     }
   }
 
   listen({ onResult, onError, onStart, onEnd, lang = 'en-IN' }) {
-    if (!this.isSupported) {
-      if (onError) onError('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
+    if (!this.isSupported || !this.recognition) {
+      if (onError) onError('unsupported');
       return null;
     }
 
     try {
-      this.recognition.lang = lang;
+      // Map language codes
+      const langMap = {
+        en: 'en-IN',
+        te: 'te-IN',
+        hi: 'hi-IN'
+      };
+      this.recognition.lang = langMap[lang] || lang || 'en-IN';
+
+      let finalResult = '';
 
       this.recognition.onstart = () => {
         if (onStart) onStart();
       };
 
       this.recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        if (onResult) onResult(transcript);
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const item = event.results[i];
+          if (item.isFinal) {
+            finalResult += item[0].transcript;
+          } else {
+            interim += item[0].transcript;
+          }
+        }
+        const text = (finalResult || interim).trim();
+        if (onResult && text) {
+          onResult(text);
+        }
       };
 
       this.recognition.onerror = (event) => {
-        console.warn('Speech recognition error:', event.error);
+        // Silently log; never throw annoying popups to the user
+        console.warn('Speech recognition status:', event.error);
         if (onError) onError(event.error);
       };
 
@@ -55,7 +79,7 @@ export class SpeechInputService {
         }
       };
     } catch (err) {
-      console.error('Speech recognition exception:', err);
+      console.warn('Speech start caught:', err);
       if (onError) onError(err.message);
       return null;
     }
